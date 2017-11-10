@@ -1,5 +1,5 @@
 import os
-
+import csv
 class Node():
 	'''Node implementation'''
 	def __init__(self):
@@ -86,9 +86,100 @@ class Trie():
 
 		return node
 
+def csvimp():
+	dictofrules = {}
+	with open('rulefile', 'r') as f:
+		reader = csv.reader(f,delimiter=" ")
+		for row in reader:
+			print row
+			rulenumber = int(row[0])
+			dest = row[1]
+			destlen = int(row[2])
+			src = row[3]
+			srclen = int(row[4])
+			
+			destrow = dest.split('.')
+			destrow = [int(i) for i in destrow]
+			srcrow = src.split('.')
+			srcrow = [int(i) for i in srcrow]
+			
+			destbin = [0 for i in destrow]
+			srcbin = [0 for i in srcrow]
+			
+			deststr = ''
+			for i in xrange(len(destrow)):
+				destbin[i] = "{0:b}".format(destrow[i])
+				temp = len(destbin[i])
+				if temp != 8:
+					tempstr = ''
+					for j in xrange(8-temp):
+						tempstr += '0'
+					destbin[i] = tempstr + destbin[i]
+				deststr += destbin[i]
+			deststr = deststr[0:destlen]
+			print deststr
+
+			srcstr = ''
+			for i in xrange(len(srcrow)):
+				srcbin[i] = "{0:b}".format(srcrow[i])
+				temp = len(srcbin[i])
+				if temp != 8:
+					tempstr = ''
+					for j in xrange(8-temp):
+						tempstr += '0'
+					srcbin[i] = tempstr + srcbin[i]
+				srcstr += srcbin[i]
+			srcstr = srcstr[0:srclen]
+			print srcstr
+
+			dictofrules[rulenumber] = [deststr,srcstr]
+	print dictofrules
+
+def inputimp():
+	with open('inputaddrfile', 'r') as f:
+		reader = csv.reader(f,delimiter=" ")
+		for row in reader:
+			print row
+			dest = row[0]
+			src = row[1]
+			
+			destrow = dest.split('.')
+			destrow = [int(i) for i in destrow]
+			srcrow = src.split('.')
+			srcrow = [int(i) for i in srcrow]
+			
+			destbin = [0 for i in destrow]
+			srcbin = [0 for i in srcrow]
+			
+			deststr = ''
+			for i in xrange(len(destrow)):
+				destbin[i] = "{0:b}".format(destrow[i])
+				temp = len(destbin[i])
+				if temp != 8:
+					tempstr = ''
+					for j in xrange(8-temp):
+						tempstr += '0'
+					destbin[i] = tempstr + destbin[i]
+				deststr += destbin[i]
+			deststr = deststr[0:16]
+			print deststr
+
+			srcstr = ''
+			for i in xrange(len(srcrow)):
+				srcbin[i] = "{0:b}".format(srcrow[i])
+				temp = len(srcbin[i])
+				if temp != 8:
+					tempstr = ''
+					for j in xrange(8-temp):
+						tempstr += '0'
+					srcbin[i] = tempstr + srcbin[i]
+				srcstr += srcbin[i]
+			srcstr = srcstr[0:16]
+			print srcstr
 
 def main():
-	pass
+	csvimp()
+	inputimp()
 
 if __name__ == '__main__':
 	main()
