@@ -52,12 +52,12 @@ class Trie():
 			elif(current_bit == '1'):
 				current_node = current_node.right
 
-		if(current_node.trie_pointer == None):
-			current_node.trie_pointer = Trie("F2")
-
 		current_node = self.traverse(current_node, subprefix, rule)
 
 	def traverse(self, node, subprefix, rule):
+
+		if node.trie_pointer == None:
+			node.trie_pointer = Trie("F2")
 
 		node.trie_pointer.addNode(subprefix, rule)
 
