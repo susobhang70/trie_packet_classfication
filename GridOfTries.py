@@ -93,15 +93,7 @@ class Trie():
 		if self.__trie_type == "F1":
 			return current_node.trie_pointer.findRule(subprefix)
 		else:
-			return self.aggregateChildRules(current_node)
-
-	def aggregateChildRules(self, node):
-		result = node.rules
-		if node.left:
-			result += self.aggregateChildRules(node.left)
-		if node.right:
-			result += self.aggregateChildRules(node.right)
-		return result
+			return current_node.rules
 
 def csvimp():
 	dictofrules = {}
