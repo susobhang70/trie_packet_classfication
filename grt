@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+import sys
 import csv
 import time
 
@@ -90,14 +92,18 @@ class Trie():
 			print "Rule for", prefix, " doesn't exist"
 			return None
 
+		if current_node.trie_pointer == None and (current_node.left or current_node.right):
+			print "Rule for", prefix, " doesn't exist"
+			return None			
+
 		if self.__trie_type == "F1":
 			return current_node.trie_pointer.findRule(subprefix)
 		else:
 			return current_node.rules
 
-def csvimp():
+def csvimp(rulefile):
 	dictofrules = {}
-	with open('rulefile', 'r') as f:
+	with open(rulefile, 'r') as f:
 		reader = csv.reader(f,delimiter=" ")
 		for row in reader:
 			# print row
@@ -145,12 +151,12 @@ def csvimp():
 	# print dictofrules
 	return dictofrules
 
-def inputimp():
+def inputimp(inputfile):
 	destination = []
 	source 		= []
 	origdest	= []
 	origsource	= []
-	with open('inputaddrfile', 'r') as f:
+	with open(inputfile, 'r') as f:
 		reader = csv.reader(f,delimiter=" ")
 		for row in reader:
 			# print row
@@ -211,8 +217,9 @@ def createTree(rules):
 
 	return F1Trie
 
-def search(trie, dest, source, origdest, origsource):
+def search(trie, dest, source, origdest, origsource, outputfile):
 	output = []
+	totaltime = 0.0
 	for i in range(len(dest)):
 		start = int(round(time.time() * 1000000))
 
@@ -220,6 +227,7 @@ def search(trie, dest, source, origdest, origsource):
 
 		end = int(round(time.time() * 1000000))
 		time_taken = end - start
+		totaltime += time_taken
 
 		matches = 0
 		try:
@@ -230,16 +238,23 @@ def search(trie, dest, source, origdest, origsource):
 		if rule == None:
 			rule = "-"
 
-		result = origdest[i] + "," + origsource[i] + "," + str(matches) + "," + str(rule) + "," + str(time_taken)
+		result = origdest[i] + " " + origsource[i] + " " + str(matches) + " " + str(rule) + " " + str(time_taken)
 		output.append(result)
 	
-	print output
+	f = open(outputfile,'w')
+	for item in output:
+		print>>f,item
+	print>>f,"Average search time is", totaltime/len(output), "microseconds"
 
+	
 def main():
-	rules = csvimp()
+	rulefile = sys.argv[2]
+	inputfile = sys.argv[4]
+	outputfile = sys.argv[6]
+	rules = csvimp(rulefile)
 	trie = createTree(rules)
-	dest, source, origdest, origsource = inputimp()
-	search(trie, dest, source, origdest, origsource)
+	dest, source, origdest, origsource = inputimp(inputfile)
+	search(trie, dest, source, origdest, origsource, outputfile)
 
 if __name__ == '__main__':
 	main()
