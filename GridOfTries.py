@@ -1,4 +1,5 @@
 import csv
+import time
 
 class Node():
 	'''Node implementation'''
@@ -8,26 +9,8 @@ class Node():
 		self.right		= None
 		self.trie_pointer = None
 
-	def setLeft(self, obj):
-		self.left = obj
-
-	def setRight(self, obj):
-		self.right = obj
-
 	def addRule(self, rule):
 		self.rules.append(rule)
-
-	def setTrie(self, obj):
-		self.trie_pointer = obj
-
-	def getTrie(self):
-		return self.trie_pointer
-
-	def getLeft(self):
-		return self.left
-
-	def getRight(self):
-		return self.right
 
 class Trie():
 	'''Trie implementation'''
@@ -72,8 +55,6 @@ class Trie():
 		if(current_node.trie_pointer == None):
 			current_node.trie_pointer = Trie("F2")
 
-		# current_node.trie_pointer.addNode(subprefix, rule)
-
 		current_node = self.traverse(current_node, subprefix, rule)
 
 	def traverse(self, node, subprefix, rule):
@@ -87,6 +68,40 @@ class Trie():
 			node.right = self.traverse(node.right, subprefix, rule)
 
 		return node
+
+	def findRule(self, prefix, subprefix = None):
+		current_node = self.__root
+
+		for i in range(len(prefix)):
+			current_bit = prefix[i]
+			if(current_bit == '0'):
+				if current_node.left:
+					current_node = current_node.left
+				else:
+					break
+
+			elif(current_bit == '1'):
+				if current_node.right:
+					current_node = current_node.right
+				else:
+					break
+
+		if current_node == self.__root:
+			print "Rule for", prefix, " doesn't exist"
+			return None
+
+		if self.__trie_type == "F1":
+			return current_node.trie_pointer.findRule(subprefix)
+		else:
+			return self.aggregateChildRules(current_node)
+
+	def aggregateChildRules(self, node):
+		result = node.rules
+		if node.left:
+			result += self.aggregateChildRules(node.left)
+		if node.right:
+			result += self.aggregateChildRules(node.right)
+		return result
 
 def csvimp():
 	dictofrules = {}
@@ -139,6 +154,10 @@ def csvimp():
 	return dictofrules
 
 def inputimp():
+	destination = []
+	source 		= []
+	origdest	= []
+	origsource	= []
 	with open('inputaddrfile', 'r') as f:
 		reader = csv.reader(f,delimiter=" ")
 		for row in reader:
@@ -180,6 +199,13 @@ def inputimp():
 			srcstr = srcstr[0:16]
 			# print srcstr
 
+			destination.append(deststr)
+			source.append(srcstr)
+			origdest.append(dest)
+			origsource.append(src)
+
+	return destination, source, origdest, origsource
+
 def createTree(rules):
 
 	F1Trie = Trie("F1")
@@ -193,10 +219,35 @@ def createTree(rules):
 
 	return F1Trie
 
+def search(trie, dest, source, origdest, origsource):
+	output = []
+	for i in range(len(dest)):
+		start = int(round(time.time() * 1000000))
+
+		rule = trie.findRule(dest[i], source[i])
+
+		end = int(round(time.time() * 1000000))
+		time_taken = end - start
+
+		matches = 0
+		try:
+			matches = len(rule)
+		except:
+			pass
+
+		if rule == None:
+			rule = "-"
+
+		result = origdest[i] + "," + origsource[i] + "," + str(matches) + "," + str(rule) + "," + str(time_taken)
+		output.append(result)
+	
+	print output
+
 def main():
 	rules = csvimp()
 	trie = createTree(rules)
-	# inputimp()
+	dest, source, origdest, origsource = inputimp()
+	search(trie, dest, source, origdest, origsource)
 
 if __name__ == '__main__':
 	main()
