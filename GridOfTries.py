@@ -1,5 +1,5 @@
-import os
 import csv
+
 class Node():
 	'''Node implementation'''
 	def __init__(self):
@@ -59,6 +59,8 @@ class Trie():
 
 	def updateSubTrie(self, prefix, subprefix, rule):
 
+		current_node = self.__root
+
 		for i in range(len(prefix)):
 			current_bit = prefix[i]
 			if(current_bit == '0'):
@@ -91,7 +93,7 @@ def csvimp():
 	with open('rulefile', 'r') as f:
 		reader = csv.reader(f,delimiter=" ")
 		for row in reader:
-			print row
+			# print row
 			rulenumber = int(row[0])
 			dest = row[1]
 			destlen = int(row[2])
@@ -117,7 +119,7 @@ def csvimp():
 					destbin[i] = tempstr + destbin[i]
 				deststr += destbin[i]
 			deststr = deststr[0:destlen]
-			print deststr
+			# print deststr
 
 			srcstr = ''
 			for i in xrange(len(srcrow)):
@@ -130,16 +132,17 @@ def csvimp():
 					srcbin[i] = tempstr + srcbin[i]
 				srcstr += srcbin[i]
 			srcstr = srcstr[0:srclen]
-			print srcstr
+			# print srcstr
 
 			dictofrules[rulenumber] = [deststr,srcstr]
-	print dictofrules
+	# print dictofrules
+	return dictofrules
 
 def inputimp():
 	with open('inputaddrfile', 'r') as f:
 		reader = csv.reader(f,delimiter=" ")
 		for row in reader:
-			print row
+			# print row
 			dest = row[0]
 			src = row[1]
 			
@@ -162,7 +165,7 @@ def inputimp():
 					destbin[i] = tempstr + destbin[i]
 				deststr += destbin[i]
 			deststr = deststr[0:16]
-			print deststr
+			# print deststr
 
 			srcstr = ''
 			for i in xrange(len(srcrow)):
@@ -175,11 +178,25 @@ def inputimp():
 					srcbin[i] = tempstr + srcbin[i]
 				srcstr += srcbin[i]
 			srcstr = srcstr[0:16]
-			print srcstr
+			# print srcstr
+
+def createTree(rules):
+
+	F1Trie = Trie("F1")
+
+	records = rules.values()
+	for record in records:
+		F1Trie.addNode(record[0])
+
+	for rule, record in rules.items():
+		F1Trie.updateSubTrie(record[0], record[1], rule)
+
+	return F1Trie
 
 def main():
-	csvimp()
-	inputimp()
+	rules = csvimp()
+	trie = createTree(rules)
+	# inputimp()
 
 if __name__ == '__main__':
 	main()
