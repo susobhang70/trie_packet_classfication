@@ -11,7 +11,7 @@ This implements a packet classification algorithm for IPv4 using Grid-of-Tries f
 Eg: 1 128.16 12 130.205 16  
 - `inputaddrfile`: Two entries per line. Each entry has a prefix value in IP dotted decimal format with two decimal numbers.  
 Eg: 128.18 130.205  
-- `outputfile`: Address1 Address2 NumOfMatches RulesMatched SearchTime(microseconds)
+- `outputfile`: Address1 Address2 NumOfMatches RulesMatched SearchTime(microseconds)  
 Eg: 128.18 130.205 1 1 45  
 Average search time is reported at the end of the file.  
 - References: Algorithms for Packet Classification <http://yuba.stanford.edu/~nickm/papers/classification_tutorial_01.pdf> Fast and Scalable layer four switching <http://www.utdallas.edu/~kxs028100/Papers/fast-and-scalable-layer-four-switching.pdf>
