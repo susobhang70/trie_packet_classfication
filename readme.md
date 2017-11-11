@@ -14,4 +14,4 @@ Eg: 128.18 130.205
 - `outputfile`: Address1 Address2 NumOfMatches RulesMatched SearchTime(microseconds)
 Eg: 128.18 130.205 1 1 45  
 Average search time is reported at the end of the file.  
-- References: Algorithms for Packet Classification <http://yuba.stanford.edu/~nickm/papers/classification_tutorial_01.pdf> Fast and Scalable layer four switching <dl.acm.org/citation.cfm?id=285282>
+- References: Algorithms for Packet Classification <http://yuba.stanford.edu/~nickm/papers/classification_tutorial_01.pdf> Fast and Scalable layer four switching <http://www.utdallas.edu/~kxs028100/Papers/fast-and-scalable-layer-four-switching.pdf>
